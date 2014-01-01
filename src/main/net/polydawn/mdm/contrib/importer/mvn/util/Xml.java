@@ -6,11 +6,11 @@ import org.w3c.dom.*;
 import org.xml.sax.*;
 
 public class Xml {
-	public static Document parse(byte[] bats) throws IOException {
+	public static Element parse(byte[] bats) throws IOException {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder db = dbf.newDocumentBuilder();
-			return db.parse(new ByteArrayInputStream(bats));
+			return db.parse(new ByteArrayInputStream(bats)).getDocumentElement();
 		} catch (ParserConfigurationException e) {
 			throw new Error("you what?", e);
 		} catch (SAXException e) {

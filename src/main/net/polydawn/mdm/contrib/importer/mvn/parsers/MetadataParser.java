@@ -14,7 +14,7 @@ public class MetadataParser {
 	private final Curler curler;
 
 	public void fetch(GroupId groupId, ArtifactId artifactId) throws MalformedURLException, IOException {
-		Document xml = Xml.parse(curler.curl(groupId.asBlob() + artifactId.asPath() + "/maven-metadata.xml"));
+		Element xml = Xml.parse(curler.curl(groupId.asBlob() + artifactId.asPath() + "/maven-metadata.xml"));
 
 		/*
 		 * Example format:
@@ -35,9 +35,7 @@ public class MetadataParser {
 			</metadata>
 		 */
 
-		Element docEle = xml.getDocumentElement();
-
-		NodeList nl = docEle.getElementsByTagName("version");
+		NodeList nl = xml.getElementsByTagName("version");
 		// it's cool how NodeList doesn't implement collection or even iterable
 		for (int i = 0; i < nl.getLength(); i++) {
 			String version = nl.item(i).getNodeValue();

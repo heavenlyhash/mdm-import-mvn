@@ -1,6 +1,7 @@
 package net.polydawn.mdm.contrib.importer.mvn.structs;
 
 import java.util.*;
+import java.util.regex.*;
 import net.polydawn.mdm.contrib.importer.mvn.util.*;
 
 public interface PartialIdentifier {
@@ -55,7 +56,7 @@ public interface PartialIdentifier {
 
 	public static abstract class ChunkedString implements PartialIdentifier {
 		public ChunkedString(String blob) {
-			this.chunks = Arrays.asList(blob.split(defineChunkSeparator()));
+			this.chunks = Arrays.asList(blob.split(Pattern.quote(defineChunkSeparator())));
 		}
 
 		public ChunkedString(List<String> chunks) {

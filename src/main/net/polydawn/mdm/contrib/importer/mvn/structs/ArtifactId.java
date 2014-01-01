@@ -7,5 +7,17 @@ package net.polydawn.mdm.contrib.importer.mvn.structs;
  * multiple "secondary artifacts" of different "type".
  */
 public class ArtifactId {
+	public ArtifactId(String blob) {
+		this.blob = blob;
+	}
 
+	private final String blob;
+
+	public String asBlob() {
+		return blob;
+	}
+
+	public String asPath() {
+		return blob;
+	}
 }

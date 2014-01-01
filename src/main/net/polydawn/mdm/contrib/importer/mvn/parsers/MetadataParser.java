@@ -14,7 +14,7 @@ public class MetadataParser {
 	private final Curler curler;
 
 	public void fetch(GroupId groupId, ArtifactId artifactId) throws MalformedURLException, IOException {
-		Element xml = Xml.parse(curler.curl(groupId.asBlob() + artifactId.asPath() + "/maven-metadata.xml"));
+		Element xml = Xml.parse(curler.curl(groupId.asBlob() + artifactId.asPath() + "maven-metadata.xml"));
 
 		/*
 		 * Example format:

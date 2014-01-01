@@ -6,18 +6,8 @@ package net.polydawn.mdm.contrib.importer.mvn.structs;
  * And by "a thing" I mean an arbitrary number of things and files, because you can have
  * multiple "secondary artifacts" of different "type".
  */
-public class ArtifactId {
+public class ArtifactId extends PartialIdentifier.PlainString {
 	public ArtifactId(String blob) {
-		this.blob = blob;
-	}
-
-	private final String blob;
-
-	public String asBlob() {
-		return blob;
-	}
-
-	public String asPath() {
-		return blob;
+		super(blob);
 	}
 }

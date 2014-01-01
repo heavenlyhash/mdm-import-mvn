@@ -31,6 +31,24 @@ public interface PartialIdentifier {
 		public String asPath() {
 			return blob + "/";
 		}
+
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((this.blob == null) ? 0 : this.blob.hashCode());
+			return result;
+		}
+
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass()) return false;
+			PlainString other = (PlainString) obj;
+			if (this.blob == null) {
+				if (other.blob != null) return false;
+			} else if (!this.blob.equals(other.blob)) return false;
+			return true;
+		}
 	}
 
 
@@ -54,6 +72,24 @@ public interface PartialIdentifier {
 
 		public String asPath() {
 			return Loco.join("/", chunks) + "/";
+		}
+
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((this.chunks == null) ? 0 : this.chunks.hashCode());
+			return result;
+		}
+
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass()) return false;
+			ChunkedString other = (ChunkedString) obj;
+			if (this.chunks == null) {
+				if (other.chunks != null) return false;
+			} else if (!this.chunks.equals(other.chunks)) return false;
+			return true;
 		}
 	}
 }

@@ -16,6 +16,7 @@ public class TestFetchingAndroidStuff {
 	private static final Curler curler = new Curler(CURL_PREFIX);
 	private static final GroupId groupId = new GroupId("org.springframework.android");
 	private static final ArtifactId artifactId = new ArtifactId("spring-android-core");
+	private static final Version version = new Version("1.0.1.RELEASE");
 
 	@Test
 	public void TestFetchingVersions() throws MalformedURLException, IOException {
@@ -31,5 +32,28 @@ public class TestFetchingAndroidStuff {
 
 	private List<Version> fetchVersions() throws MalformedURLException, IOException {
 		return new MetadataParser(curler).fetch(groupId, artifactId);
+	}
+
+	@Test
+	public void TestListingContents() throws MalformedURLException, IOException {
+		List<String> files = new DirParser(curler).fetch(groupId, artifactId, version).getFileList();
+		Iterator<String> itr = files.iterator();
+		assertEquals("spring-android-core-1.0.1.RELEASE-javadoc.jar"      , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-javadoc.jar.asc"  , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-javadoc.jar.md5"  , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-javadoc.jar.sha1" , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-sources.jar"      , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-sources.jar.asc"  , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-sources.jar.md5"  , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE-sources.jar.sha1" , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.jar"              , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.jar.asc"          , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.jar.md5"          , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.jar.sha1"         , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.pom"              , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.pom.asc"          , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.pom.md5"          , itr.next());
+		assertEquals("spring-android-core-1.0.1.RELEASE.pom.sha1"         , itr.next());
+		assertFalse(itr.hasNext());
 	}
 }

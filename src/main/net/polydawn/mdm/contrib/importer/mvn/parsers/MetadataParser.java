@@ -2,6 +2,7 @@ package net.polydawn.mdm.contrib.importer.mvn.parsers;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 import net.polydawn.mdm.contrib.importer.mvn.structs.*;
 import net.polydawn.mdm.contrib.importer.mvn.util.*;
 import org.w3c.dom.*;
@@ -13,7 +14,7 @@ public class MetadataParser {
 
 	private final Curler curler;
 
-	public void fetch(GroupId groupId, ArtifactId artifactId) throws MalformedURLException, IOException {
+	public List<Version> fetch(GroupId groupId, ArtifactId artifactId) throws MalformedURLException, IOException {
 		Element xml = Xml.parse(curler.curl(groupId.asBlob() + artifactId.asPath() + "maven-metadata.xml"));
 
 		/*
@@ -36,9 +37,11 @@ public class MetadataParser {
 		 */
 
 		NodeList nl = xml.getElementsByTagName("version");
+		List<Version> answer = new ArrayList<Version>(nl.getLength());
 		// it's cool how NodeList doesn't implement collection or even iterable
 		for (int i = 0; i < nl.getLength(); i++) {
-			String version = nl.item(i).getNodeValue();
+			answer.add(new Version(nl.item(i).getNodeValue()));
 		}
+		return answer;
 	}
 }

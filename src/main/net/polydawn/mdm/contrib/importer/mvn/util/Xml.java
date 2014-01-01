@@ -9,6 +9,7 @@ public class Xml {
 	public static Element parse(byte[] bats) throws IOException {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setValidating(false);
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			return db.parse(new ByteArrayInputStream(bats)).getDocumentElement();
 		} catch (ParserConfigurationException e) {

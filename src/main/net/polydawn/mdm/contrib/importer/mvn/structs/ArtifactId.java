@@ -1,4 +1,4 @@
-package net.polydawn.mdm.contrib.importer.mvn;
+package net.polydawn.mdm.contrib.importer.mvn.structs;
 
 /**
  * A thing that identifies an artifact, if you believe the name; of course, it doesn't,

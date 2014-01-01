@@ -1,4 +1,4 @@
-package net.polydawn.mdm.contrib.importer.mvn;
+package net.polydawn.mdm.contrib.importer.mvn.structs;
 
 /**
  * A {@link GroupId} is the dot-separated thingy. It tends to kind look like your org name and the

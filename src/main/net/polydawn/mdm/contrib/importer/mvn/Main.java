@@ -18,14 +18,47 @@ public class Main {
 		GroupId groupId = new GroupId(args[0]);
 		ArtifactId artifactId = new ArtifactId(args[1]);
 
-		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
+		String exportName = groupId.asBlob()+".."+artifactId.asBlob();
 
+		// TODO: check if already exists first.
+		exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
+		System.out.println();
+
+		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
 		for (Version version : versions) {
+			// TODO: check if already exists first.
+			// wonder if we should curl maven repos again to make sure they didn't change, because they have before, and it's caused people bad days.  but I don't know how we'd respond, anyway.
+
+			System.out.println("handling version "+version.asBlob()+":");
+
 			List<String> files = new DirParser(curler).fetch(groupId, artifactId, version).getFileList();
 
+			// TODO: actually curl
+
+			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob(), "--files=/tmp/meh");
+
+			System.out.println();
 		}
 	}
 
 	private static final String CURL_PREFIX = "http://repo1.maven.org/maven2/";
 	private static final Curler curler = new Curler(CURL_PREFIX);
+
+	private static int exec(String... cmd) {
+		try {
+			Process p = new ProcessBuilder(cmd)
+				.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+				.redirectError(ProcessBuilder.Redirect.INHERIT)
+				.start();
+			p.getOutputStream().close();
+			p.waitFor();
+			return p.exitValue();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Integer.MIN_VALUE;
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return Integer.MIN_VALUE;
+		}
+	}
 }

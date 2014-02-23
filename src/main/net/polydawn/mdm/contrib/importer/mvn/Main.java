@@ -69,14 +69,28 @@ public class Main {
 			tmpdir.delete();
 			System.out.println();
 		}
+
+		// shrink repo and drop uninteresting logs
+		System.out.println("cleaning up release repo");
+		exec(new File(exportName), "git", "reflog", "expire", "--all");
+		exec(new File(exportName), "git", "gc", "--aggressive", "--prune=now");
+		System.out.println();
+
+		System.out.println("done!");
 	}
 
 	private static final String CURL_PREFIX = "http://repo1.maven.org/maven2/";
 	private static final Curler curler = new Curler(CURL_PREFIX);
 
+
 	private static int exec(String... cmd) {
+		return exec(new File("."), cmd);
+	}
+
+	private static int exec(File cwd, String... cmd) {
 		try {
 			Process p = new ProcessBuilder(cmd)
+				.directory(cwd)
 				.redirectOutput(ProcessBuilder.Redirect.INHERIT)
 				.redirectError(ProcessBuilder.Redirect.INHERIT)
 				.start();

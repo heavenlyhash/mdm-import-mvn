@@ -50,6 +50,10 @@ public interface PartialIdentifier {
 			} else if (!this.blob.equals(other.blob)) return false;
 			return true;
 		}
+
+		public String toString() {
+			return asBlob();
+		}
 	}
 
 
@@ -91,6 +95,10 @@ public interface PartialIdentifier {
 				if (other.chunks != null) return false;
 			} else if (!this.chunks.equals(other.chunks)) return false;
 			return true;
+		}
+
+		public String toString() {
+			return asBlob();
 		}
 	}
 }

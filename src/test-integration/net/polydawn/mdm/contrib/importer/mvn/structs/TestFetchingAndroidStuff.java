@@ -56,4 +56,44 @@ public class TestFetchingAndroidStuff {
 		assertEquals("spring-android-core-1.0.1.RELEASE.pom.sha1"         , itr.next().asBlob());
 		assertFalse(itr.hasNext());
 	}
+
+	/**
+	 * Same as {@link #TestListingContents()}, but with some urls being long enough
+	 * that their text is truncated and ends in "..>".
+	 *
+	 * Hilariously, notice how this is actually the version of the test project that
+	 * comes BEFORE the one examined in {@link #TestListingContents()}. Evidentally at
+	 * some point the maven plugin that publishes .asc files stopped bothering to
+	 * generate checksums on them.
+	 */
+	@Test
+	public void TestListingLongerContents() throws MalformedURLException, IOException {
+		List<BlobId> files = new DirParser(curler).fetch(groupId, artifactId, new Version("1.0.0.RELEASE"));
+		Iterator<BlobId> itr = files.iterator();
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar"          , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar.asc"      , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar.asc.md5"  , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar.asc.sha1" , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar.md5"      , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-javadoc.jar.sha1"     , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar"          , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar.asc"      , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar.asc.md5"  , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar.asc.sha1" , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar.md5"      , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE-sources.jar.sha1"     , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar"                  , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar.asc"              , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar.asc.md5"          , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar.asc.sha1"         , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar.md5"              , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.jar.sha1"             , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom"                  , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom.asc"              , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom.asc.md5"          , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom.asc.sha1"         , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom.md5"              , itr.next().asBlob());
+		assertEquals("spring-android-core-1.0.0.RELEASE.pom.sha1"             , itr.next().asBlob());
+		assertFalse(itr.hasNext());
+	}
 }

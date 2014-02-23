@@ -51,7 +51,7 @@ public class DirParser {
 		List<BlobId> answer = new ArrayList<BlobId>(nl.getLength());
 		// start from 1, because zero is "../" and there's no other discriminators ffs
 		for (int i = 1; i < nl.getLength(); i++) {
-			answer.add(new BlobId(nl.item(i).getTextContent()));
+			answer.add(new BlobId(nl.item(i).getAttributes().getNamedItem("href").getTextContent()));
 		}
 		return answer;
 	}

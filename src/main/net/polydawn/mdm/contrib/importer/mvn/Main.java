@@ -21,14 +21,20 @@ public class Main {
 
 		String exportName = groupId.asBlob()+".."+artifactId.asBlob();
 
-		// TODO: check if already exists first.
-		exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
-		System.out.println();
+		if (!new File(exportName).exists()) {
+			exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
+			System.out.println();
+		} else {
+			System.out.println("path "+exportName+" already exists, skipping release-init");
+			System.out.println();
+		}
 
 		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
 		for (Version version : versions) {
-			// TODO: check if already exists first.
-			// wonder if we should curl maven repos again to make sure they didn't change, because they have before, and it's caused people bad days.  but I don't know how we'd respond, anyway.
+			if (new File(exportName, ".git/refs/heads/mdm/release/"+version.asBlob()).exists()) {
+				System.out.println("version "+version.asBlob()+" already exists, skipping");
+				continue;
+			}
 
 			System.out.println("handling version "+version.asBlob()+":");
 

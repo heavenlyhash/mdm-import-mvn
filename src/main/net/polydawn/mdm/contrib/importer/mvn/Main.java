@@ -64,6 +64,7 @@ public class Main {
 			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob(), "--files="+tmpdir.toString());
 
 			// clean up
+			for (File f : tmpdir.listFiles()) f.delete();
 			tmpdir.delete();
 			System.out.println();
 		}

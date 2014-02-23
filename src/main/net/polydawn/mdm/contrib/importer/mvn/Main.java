@@ -32,7 +32,7 @@ public class Main {
 		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
 		for (Version version : versions) {
 			// skip if we've got this version
-			if (0 == exec("git", "ls-remote", "--exit-code", exportName, "refs/heads/mdm/release/"+version.asBlob())) {
+			if (0 == exec(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+version.asBlob())) {
 				System.out.println("version "+version.asBlob()+" already exists, skipping");
 				System.out.println();
 				continue;

@@ -12,16 +12,17 @@ public class Main {
 		if (args.length != 2) {
 			System.err.println(
 				"Usage: exactly two args, groupId and artifactId.\n"+
-				"An mdm repo named {groupId}..{artifactId} will be created, or new versions appended to it if present."
+				"An mdm repo named \"{groupId}/{artifactId}\" will be created, or new versions appended to it if present."
 			);
 		}
 
 		GroupId groupId = new GroupId(args[0]);
 		ArtifactId artifactId = new ArtifactId(args[1]);
 
-		String exportName = groupId.asBlob()+".."+artifactId.asBlob();
+		String exportName = groupId.asBlob()+"/"+artifactId.asBlob();
 
 		if (!new File(exportName).exists()) {
+			new File(groupId.asBlob()).mkdir();
 			exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
 			System.out.println();
 		} else {

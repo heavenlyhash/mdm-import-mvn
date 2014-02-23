@@ -31,6 +31,7 @@ public class Main {
 
 		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
 		for (Version version : versions) {
+			// skip if we've got this version
 			if (new File(exportName, ".git/refs/heads/mdm/release/"+version.asBlob()).exists()) {
 				System.out.println("version "+version.asBlob()+" already exists, skipping");
 				continue;
@@ -38,9 +39,11 @@ public class Main {
 
 			System.out.println("handling version "+version.asBlob()+":");
 
+			// download all our junk to a temporary location
 			File tmpdir = FileUtil.createTmpDir(new File("."));
 			tmpdir.deleteOnExit();
 
+			// fetch files, save to disk
 			List<BlobId> files = new DirParser(curler).fetch(groupId, artifactId, version);
 			for (BlobId file : files) {
 				String route = groupId.asPath() + artifactId.asPath() + version.asPath() + file.asPath();
@@ -50,9 +53,11 @@ public class Main {
 				FileUtil.save(blob, new File(tmpdir, file.asBlob()));
 			}
 
+			// execute mdm release
 			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob(), "--files="+tmpdir.toString());
-			tmpdir.delete();
 
+			// clean up
+			tmpdir.delete();
 			System.out.println();
 		}
 	}

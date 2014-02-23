@@ -1,0 +1,6 @@
+[submodule "lib/junit"]
+	path = lib/junit
+	url = https://github.com/mdm-releases/junit-releases.git
+	mdm = dependency
+	mdm-version = v4.10
+	update = none

@@ -50,11 +50,14 @@ public class Main {
 				if (file.asBlob().endsWith(".md5")) continue;
 				if (file.asBlob().endsWith(".sha1")) continue;
 
+				// pick output filename.  (strip the version name: in our world the version is a property of the version control, not the file name)
+				String saveName = file.asBlob().replace("-"+version.asBlob(), "");
+
+				// download and save
 				String route = groupId.asPath() + artifactId.asPath() + version.asPath() + file.asPath();
 				System.out.println("  curling "+route);
 				byte[] blob = curler.curl(route);
-				// TODO: parse out the version name from the blob, discard it: in our world the version is a property of the version control, not the file name
-				FileUtil.save(blob, new File(tmpdir, file.asBlob()));
+				FileUtil.save(blob, new File(tmpdir, saveName));
 			}
 
 			// execute mdm release

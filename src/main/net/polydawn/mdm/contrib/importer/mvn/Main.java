@@ -46,6 +46,10 @@ public class Main {
 			// fetch files, save to disk
 			List<BlobId> files = new DirParser(curler).fetch(groupId, artifactId, version);
 			for (BlobId file : files) {
+				// skip files that are checksums.  in our world, checksums are the responsibility of the version control.
+				if (file.asBlob().endsWith(".md5")) continue;
+				if (file.asBlob().endsWith(".sha1")) continue;
+
 				String route = groupId.asPath() + artifactId.asPath() + version.asPath() + file.asPath();
 				System.out.println("  curling "+route);
 				byte[] blob = curler.curl(route);

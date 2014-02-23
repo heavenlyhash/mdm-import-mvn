@@ -36,8 +36,8 @@ public class Xml {
 		int[] failure = computeKmpFailure(pattern);
 
 		int j = 0;
-		if (data.length == 0) return Collections.EMPTY_LIST;
-		if (pattern.length > data.length) return Collections.EMPTY_LIST;
+		if (data.length == 0) return Collections.emptyList();
+		if (pattern.length > data.length) return Collections.emptyList();
 
 		List<Integer> answer = new LinkedList<Integer>();
 		for (int i = 0; i < data.length; i++) {

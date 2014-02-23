@@ -14,7 +14,7 @@ public class DirParser {
 
 	private final Curler curler;
 
-	public Thingy fetch(GroupId groupId, ArtifactId artifactId, Version version) throws MalformedURLException, IOException {
+	public List<BlobId> fetch(GroupId groupId, ArtifactId artifactId, Version version) throws MalformedURLException, IOException {
 		Element xml = Xml.parse(curler.curl(groupId.asPath() + artifactId.asPath() + version.asPath()));
 
 		/*
@@ -48,12 +48,12 @@ public class DirParser {
 		 */
 
 		NodeList nl = xml.getElementsByTagName("a"); // god have mercy
-		List<String> answer = new ArrayList<String>(nl.getLength());
+		List<BlobId> answer = new ArrayList<BlobId>(nl.getLength());
 		// start from 1, because zero is "../" and there's no other discriminators ffs
 		for (int i = 1; i < nl.getLength(); i++) {
-			answer.add(nl.item(i).getTextContent());
+			answer.add(new BlobId(nl.item(i).getTextContent()));
 		}
-		return new Thingy(answer);
+		return answer;
 	}
 }
 

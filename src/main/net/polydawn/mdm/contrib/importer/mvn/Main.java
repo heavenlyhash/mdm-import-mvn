@@ -31,7 +31,7 @@ public class Main {
 
 			System.out.println("handling version "+version.asBlob()+":");
 
-			List<String> files = new DirParser(curler).fetch(groupId, artifactId, version).getFileList();
+			List<BlobId> files = new DirParser(curler).fetch(groupId, artifactId, version);
 
 			// TODO: actually curl
 

@@ -25,7 +25,7 @@
 	<path id="app.path.deps.test">
 		<path refid="app.path.main" />
 		<pathelement location="${lib}/junit/junit.jar"/>
-		<pathelement location="${target.javac}/test-fixture" />
+		<pathelement location="${target.javac}/test-fixtures" />
 	</path>
 	<path id="app.path.test">
 		<path refid="app.path.deps.test" />

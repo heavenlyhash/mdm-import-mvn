@@ -63,7 +63,7 @@ public class Main {
 			}
 
 			// execute mdm release
-			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob(), "--files="+tmpdir.toString());
+			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob()+".mvn", "--files="+tmpdir.toString());
 
 			// clean up
 			for (File f : tmpdir.listFiles()) f.delete();

@@ -14,6 +14,7 @@ public class Main {
 				"Usage: exactly two args, groupId and artifactId.\n"+
 				"An mdm repo named \"{groupId}/{artifactId}-releases\" will be created, or new versions appended to it if present."
 			);
+			System.exit(1);
 		}
 
 		GroupId groupId = new GroupId(args[0]);

@@ -32,6 +32,7 @@ public class Main {
 		}
 
 		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
+		boolean gotSome = false;
 		for (Version version : versions) {
 			String versionTarget = version.asBlob() + ".mvn";
 
@@ -41,6 +42,7 @@ public class Main {
 				System.out.println();
 				continue;
 			}
+			gotSome |= true;
 
 			System.out.println("handling version "+version.asBlob()+":");
 
@@ -75,10 +77,12 @@ public class Main {
 		}
 
 		// shrink repo and drop uninteresting logs
-		System.out.println("cleaning up release repo");
-		exec(new File(exportName), "git", "reflog", "expire", "--all");
-		exec(new File(exportName), "git", "gc", "--aggressive", "--prune=now");
-		System.out.println();
+		if (gotSome) {
+			System.out.println("cleaning up release repo");
+			exec(new File(exportName), "git", "reflog", "expire", "--all");
+			exec(new File(exportName), "git", "gc", "--aggressive", "--prune=now");
+			System.out.println();
+		}
 
 		System.out.println("done!");
 	}

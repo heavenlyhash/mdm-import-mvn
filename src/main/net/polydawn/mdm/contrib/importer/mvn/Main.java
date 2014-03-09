@@ -33,9 +33,11 @@ public class Main {
 
 		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
 		for (Version version : versions) {
+			String versionTarget = version.asBlob() + ".mvn";
+
 			// skip if we've got this version
-			if (0 == exec(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+version.asBlob())) {
-				System.out.println("version "+version.asBlob()+" already exists, skipping");
+			if (0 == exec(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+versionTarget)) {
+				System.out.println("version "+versionTarget+" already exists, skipping");
 				System.out.println();
 				continue;
 			}
@@ -64,7 +66,7 @@ public class Main {
 			}
 
 			// execute mdm release
-			exec("mdm", "release", "--repo="+exportName, "--version="+version.asBlob()+".mvn", "--files="+tmpdir.toString());
+			exec("mdm", "release", "--repo="+exportName, "--version="+versionTarget, "--files="+tmpdir.toString());
 
 			// clean up
 			for (File f : tmpdir.listFiles()) f.delete();

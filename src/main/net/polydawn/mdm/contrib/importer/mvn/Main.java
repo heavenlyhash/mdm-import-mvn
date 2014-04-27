@@ -9,22 +9,29 @@ import net.polydawn.mdm.contrib.importer.mvn.structs.*;
 import net.polydawn.mdm.contrib.importer.mvn.util.*;
 
 public class Main {
+	private static void printUsage() {
+		System.err.println(
+			"Usage:\n" +
+			"  mdm-import-mvn <groupId> <artifactId> [outputDir]\n"+
+			"\n"+
+			"  If no output dir is provided, it defaults to \"{groupId}/{artifactId}-releases\".\n"+
+			"  An mdm repo will be created there, or new versions appended to it if present."
+		);
+	}
+
 	public static void main(String[] args) throws MalformedURLException, IOException, ExecutionException {
-		if (args.length != 2) {
-			System.err.println(
-				"Usage: exactly two args, groupId and artifactId.\n"+
-				"An mdm repo named \"{groupId}/{artifactId}-releases\" will be created, or new versions appended to it if present."
-			);
+		if (args.length < 2 || args.length > 3) {
+			printUsage();
 			System.exit(1);
 		}
 
 		GroupId groupId = new GroupId(args[0]);
 		ArtifactId artifactId = new ArtifactId(args[1]);
 
-		String exportName = groupId.asBlob()+"/"+artifactId.asBlob()+"-releases";
+		String exportName = (args.length >= 3) ? args[2] : groupId.asBlob()+"/"+artifactId.asBlob()+"-releases";
 
 		if (!new File(exportName).exists()) {
-			new File(groupId.asBlob()).mkdir();
+			new File(exportName).mkdirs();
 			exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
 			System.out.println();
 		} else {

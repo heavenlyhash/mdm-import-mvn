@@ -3,12 +3,13 @@ package net.polydawn.mdm.contrib.importer.mvn;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.*;
 import net.polydawn.mdm.contrib.importer.mvn.parsers.*;
 import net.polydawn.mdm.contrib.importer.mvn.structs.*;
 import net.polydawn.mdm.contrib.importer.mvn.util.*;
 
 public class Main {
-	public static void main(String[] args) throws MalformedURLException, IOException {
+	public static void main(String[] args) throws MalformedURLException, IOException, ExecutionException {
 		if (args.length != 2) {
 			System.err.println(
 				"Usage: exactly two args, groupId and artifactId.\n"+
@@ -105,11 +106,11 @@ public class Main {
 	private static final Curler curler = new Curler(CURL_PREFIX);
 
 
-	private static int exec(String... cmd) {
+	private static int exec(String... cmd) throws ExecutionException {
 		return exec(new File("."), cmd);
 	}
 
-	private static int exec(File cwd, String... cmd) {
+	private static int exec(File cwd, String... cmd) throws ExecutionException {
 		try {
 			Process p = new ProcessBuilder(cmd)
 				.directory(cwd)
@@ -118,13 +119,14 @@ public class Main {
 				.start();
 			p.getOutputStream().close();
 			p.waitFor();
-			return p.exitValue();
+			int exitCode = p.exitValue();
+			if (exitCode != 0)
+				throw new ExecutionException("executing \""+cmd[0]+"\" returned code "+exitCode, null);
+			return exitCode;
 		} catch (IOException e) {
-			e.printStackTrace();
-			return Integer.MIN_VALUE;
+			throw new ExecutionException("error executing \""+cmd[0]+"\"", e);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return Integer.MIN_VALUE;
+			throw new ExecutionException("error executing \""+cmd[0]+"\"", e);
 		}
 	}
 }

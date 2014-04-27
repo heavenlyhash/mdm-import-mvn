@@ -38,7 +38,7 @@ public class Main {
 			String versionTarget = version.asBlob() + ".mvn";
 
 			// skip if we've got this version
-			if (0 == exec(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+versionTarget)) {
+			if (0 == execa(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+versionTarget)) {
 				System.out.println("version "+versionTarget+" already exists, skipping");
 				System.out.println();
 				continue;
@@ -107,11 +107,24 @@ public class Main {
 
 
 	private static int exec(String... cmd) throws ExecutionException {
-		return exec(new File("."), cmd);
+		return exec(false, new File("."), cmd);
+	}
+
+	private static int execa(String... cmd) throws ExecutionException {
+		return exec(true, new File("."), cmd);
 	}
 
 	private static int exec(File cwd, String... cmd) throws ExecutionException {
+		return exec(false, new File("."), cmd);
+	}
+
+	private static int execa(File cwd, String... cmd) throws ExecutionException {
+		return exec(true, new File("."), cmd);
+	}
+
+	private static int exec(boolean allowNonzero, File cwd, String... cmd) throws ExecutionException {
 		try {
+			System.out.println("exec: "+Arrays.toString(cmd));
 			Process p = new ProcessBuilder(cmd)
 				.directory(cwd)
 				.redirectOutput(ProcessBuilder.Redirect.INHERIT)
@@ -120,7 +133,7 @@ public class Main {
 			p.getOutputStream().close();
 			p.waitFor();
 			int exitCode = p.exitValue();
-			if (exitCode != 0)
+			if (!allowNonzero && exitCode != 0)
 				throw new ExecutionException("executing \""+cmd[0]+"\" returned code "+exitCode, null);
 			return exitCode;
 		} catch (IOException e) {

@@ -69,7 +69,11 @@
 			</manifest>
 			<fileset file="${target.javac}/main/**"/>
 		</exusPack>
-		<chmod file="${dist}/${app}.jar" perm="755"/>
+
+		<exusJavaBang
+			     src="${dist}/${app}.jar"
+			     dest="${dist}/${app}"
+		/>
 	</target>
 
 

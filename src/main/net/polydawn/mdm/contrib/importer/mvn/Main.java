@@ -29,13 +29,16 @@ public class Main {
 		ArtifactId artifactId = new ArtifactId(args[1]);
 
 		String exportName = (args.length >= 3) ? args[2] : groupId.asBlob()+"/"+artifactId.asBlob()+"-releases";
+		File exportDir = new File(exportName).getCanonicalFile();
 
-		if (!new File(exportName).exists()) {
-			new File(exportName).mkdirs();
-			exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportName);
+		if (!exportDir.exists())
+			exportDir.mkdirs();
+
+		if (0 != execa(exportDir, "git", "ls-remote", "--exit-code", exportDir.toString(), "mdm/init")) {
+			exec("mdm", "release-init", "--name="+artifactId.asBlob(), "--repo="+exportDir.toString());
 			System.out.println();
 		} else {
-			System.out.println("path "+exportName+" already exists, skipping release-init");
+			System.out.println("release repo already exists at "+exportName+", skipping release-init");
 			System.out.println();
 		}
 
@@ -45,7 +48,7 @@ public class Main {
 			String versionTarget = version.asBlob() + ".mvn";
 
 			// skip if we've got this version
-			if (0 == execa(new File(exportName), "git", "ls-remote", "--exit-code", ".", "refs/heads/mdm/release/"+versionTarget)) {
+			if (0 == execa(exportDir, "git", "ls-remote", "--exit-code", exportDir.toString(), "refs/heads/mdm/release/"+versionTarget)) {
 				System.out.println("version "+versionTarget+" already exists, skipping");
 				System.out.println();
 				continue;
@@ -76,7 +79,7 @@ public class Main {
 			}
 
 			// execute mdm release
-			exec("mdm", "release", "--repo="+exportName, "--version="+versionTarget, "--files="+tmpdir.toString());
+			exec("mdm", "release", "--repo="+exportDir.toString(), "--version="+versionTarget, "--files="+tmpdir.toString());
 
 			// clean up
 			for (File f : tmpdir.listFiles()) f.delete();
@@ -87,21 +90,21 @@ public class Main {
 		// shrink repo and drop uninteresting logs
 		if (gotSome) {
 			System.out.println("cleaning up release repo");
-			exec(new File(exportName), "git", "reflog", "expire", "--all");
+			exec(exportDir, "git", "reflog", "expire", "--all");
 			String conf_pack = System.getenv("PACK");
 			System.out.println("  pack configured to: \""+conf_pack+"\"");
 			if ("aggressive".equals(conf_pack)) {
 				System.out.println("  running aggressive gc");
-				exec(new File(exportName), "git", "gc", "--aggressive", "--prune=now");
+				exec(exportDir, "git", "gc", "--aggressive", "--prune=now");
 			} else if ("wide".equals(conf_pack)) {
 				System.out.println("  running 'wide' repack");
 				// repack into files of a limited size.  this makes a serious effort at deduping, but also refrains
 				// from creating overly large packfiles, which is important because git transports don't pull objects
 				// out of packs if a client only needs part of the pack.
-				exec(new File(exportName), "git", "repack", "--max-pack-size=1M", "--depth=3", "--window=550", "-adf");
+				exec(exportDir, "git", "repack", "--max-pack-size=1M", "--depth=3", "--window=550", "-adf");
 				// also do a (non-aggro) gc.  this removes packs that might now be dangling, and also does some other
 				// cleanup like packing refs files (can help reduce round trips for a dumb http client).
-				exec(new File(exportName), "git", "gc", "--prune=now");
+				exec(exportDir, "git", "gc", "--prune=now");
 			}
 			System.out.println();
 		}

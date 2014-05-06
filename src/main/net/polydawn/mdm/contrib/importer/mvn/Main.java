@@ -134,7 +134,6 @@ public class Main {
 
 	private static int exec(boolean allowNonzero, File cwd, String... cmd) throws ExecutionException {
 		try {
-			System.out.println("exec: "+Arrays.toString(cmd));
 			Process p = new ProcessBuilder(cmd)
 				.directory(cwd)
 				.redirectOutput(ProcessBuilder.Redirect.INHERIT)

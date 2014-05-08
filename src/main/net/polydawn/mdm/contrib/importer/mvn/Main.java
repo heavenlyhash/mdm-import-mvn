@@ -78,6 +78,12 @@ public class Main {
 				FileUtil.save(blob, new File(tmpdir, saveName));
 			}
 
+			// in case the maven release is empty (which happens), create a blank file.
+			// mdm doesn't let you make empty releases, because it's not insane, but we do want to record that an "import" (heavy on the air-quotes) did in fact happen here.
+			if (files.size() == 0) {
+				FileUtil.save(new byte[0], new File(tmpdir, ".blank"));
+			}
+
 			// execute mdm release
 			exec("mdm", "release", "--repo="+exportDir.toString(), "--version="+versionTarget, "--files="+tmpdir.toString());
 

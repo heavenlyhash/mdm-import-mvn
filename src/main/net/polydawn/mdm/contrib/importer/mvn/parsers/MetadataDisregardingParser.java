@@ -85,6 +85,20 @@ public class MetadataDisregardingParser {
 		 *     - http://central.maven.org/maven2/wsdl4j/wsdl4j/maven-metadata.xml
 		 *     - http://central.maven.org/maven2/wsdl4j/wsdl4j/
 		 *
+		 * Aether -- the Sonatype second-try-to-find-our-own-anuses abandonware (hucked over the wall to
+		 * the eclipse foundation to avoid the admission of defeat, but let's call it what it is) --
+		 * also trusts the maven-metadata.xml file for an accurate version list, and so is also effectively useless.
+		 *
+		 * Also I downloaded an animal-sniffer to find that out.  No, really:
+
+			[INFO] --- animal-sniffer-maven-plugin:1.7:check (check-java-1.5-compat) @ aether-demo-snippets ---
+			[INFO] Checking unresolved references to org.codehaus.mojo.signature:java15:1.0
+
+		 *
+		 * What is this strange hell
+		 *
+		 * Where are the spike pits and acid pools, I wish to throw myself on their mercy
+		 *
 		 */
 
 		NodeList nl = xml.getElementsByTagName("a"); // god have mercy

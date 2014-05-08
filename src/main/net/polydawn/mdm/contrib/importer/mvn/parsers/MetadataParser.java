@@ -7,6 +7,7 @@ import net.polydawn.mdm.contrib.importer.mvn.structs.*;
 import net.polydawn.mdm.contrib.importer.mvn.util.*;
 import org.w3c.dom.*;
 
+// NOTE: dead code, because maven doesn't enforce it's own programmatic API, so we can't trust it either.  see MetadataDisregardingParser instead.
 public class MetadataParser {
 	public MetadataParser(Curler curler) {
 		this.curler = curler;

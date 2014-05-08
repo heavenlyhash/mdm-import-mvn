@@ -42,7 +42,7 @@ public class Main {
 			System.out.println();
 		}
 
-		List<Version> versions = new MetadataParser(curler).fetch(groupId, artifactId);
+		List<Version> versions = new MetadataDisregardingParser(curler).fetch(groupId, artifactId);
 		boolean gotSome = false;
 		for (Version version : versions) {
 			String versionTarget = version.asBlob() + ".mvn";

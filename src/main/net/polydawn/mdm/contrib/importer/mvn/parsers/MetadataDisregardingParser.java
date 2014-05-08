@@ -110,6 +110,14 @@ public class MetadataDisregardingParser {
 			String prayersAndBlood = nl.item(i).getAttributes().getNamedItem("href").getTextContent();
 			if (prayersAndBlood.endsWith("/"))
 				answer.add(new Version(prayersAndBlood.substring(0, prayersAndBlood.length()-1)));
+			// Not a speck of light is showing
+			// so the danger must be growing.
+			// Are the fires of hell a glowing?
+			// Is the grisly reaper mowing?
+			// Yes! The danger must be growing
+			// For the rowers keep on rowing.
+			// And they're certainly not showing
+			// any signs that they are slowing!
 		}
 		return answer;
 	}

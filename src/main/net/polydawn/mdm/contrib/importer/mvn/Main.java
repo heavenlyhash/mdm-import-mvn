@@ -90,21 +90,19 @@ public class Main {
 		// shrink repo and drop uninteresting logs
 		if (gotSome) {
 			System.out.println("cleaning up release repo");
-			exec(exportDir, "git", "reflog", "expire", "--all");
 			String conf_pack = System.getenv("PACK");
 			System.out.println("  pack configured to: \""+conf_pack+"\"");
 			if ("aggressive".equals(conf_pack)) {
 				System.out.println("  running aggressive gc");
+				exec(exportDir, "git", "reflog", "expire", "--all");
 				exec(exportDir, "git", "gc", "--aggressive", "--prune=now");
 			} else if ("wide".equals(conf_pack)) {
 				System.out.println("  running 'wide' repack");
+				exec(exportDir, "git", "reflog", "expire", "--all");
 				// repack into files of a limited size.  this makes a serious effort at deduping, but also refrains
 				// from creating overly large packfiles, which is important because git transports don't pull objects
 				// out of packs if a client only needs part of the pack.
 				exec(exportDir, "git", "repack", "--max-pack-size=1M", "--depth=3", "--window=550", "-adf");
-				// also do a (non-aggro) gc.  this removes packs that might now be dangling, and also does some other
-				// cleanup like packing refs files (can help reduce round trips for a dumb http client).
-				exec(exportDir, "git", "gc", "--prune=now");
 			}
 			System.out.println();
 		}
